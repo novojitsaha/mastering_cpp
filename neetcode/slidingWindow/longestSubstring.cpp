@@ -13,27 +13,28 @@ class Solution
 public:
     int lengthOfLongestSubstring(std::string s)
     {
-        std::unordered_map<char, int> charIdxMap;
-        int longestLength{0};
 
-        int currentLength{0};
-        for (size_t i{0}; i < s.size(); i)
+        if (s.size() < 2)
+            return s.size();
+
+        int longestLength{1}, currentLength{1}, leftPtr{0}, rightPtr{1};
+        std::unordered_map<char, int> charIdxMap{{s[leftPtr], leftPtr}};
+
+        while (rightPtr < s.size())
         {
-            if (charIdxMap.count(s[i]))
+            if (charIdxMap.count(s[rightPtr]))
             {
-                i = charIdxMap[s[i]] + 1;
-                if (currentLength > longestLength)
-                {
-                    longestLength = currentLength;
-                }
-                currentLength = 0;
-                charIdxMap.clear();
+                longestLength = std::max(currentLength, longestLength);
+                leftPtr = std::max((charIdxMap[s[rightPtr]] + 1), leftPtr) ;
+                charIdxMap[s[rightPtr]] = rightPtr;
+                currentLength = rightPtr - leftPtr + 1;
+                ++rightPtr;
             }
             else
             {
-                charIdxMap.emplace(s[i], i);
+                charIdxMap.emplace(s[rightPtr], rightPtr);
+                ++rightPtr;
                 ++currentLength;
-                ++i;
             }
         }
 
