@@ -14,18 +14,20 @@ int characterReplacement(std::string s, int k)
 {
     std::unordered_map<char, int> charFreqMap;
 
-    int leftPtr{0}, maxCount{0}, longestLength{0};
+    int leftPtr{0}, topFreq{0}, longestLength{0};
 
-    for (int rightPtr{0}; rightPtr < static_cast<int>(s.size()); ++rightPtr)
+    for (int rightPtr{0}; rightPtr < s.size(); ++rightPtr)
     {
-        maxCount = std::max(maxCount, ++charFreqMap[s[rightPtr]]);
+        charFreqMap[s[rightPtr]]++;
+        topFreq = std::max(topFreq, charFreqMap[s[rightPtr]]);
 
-        while ((rightPtr - leftPtr + 1) - maxCount > k)
+        if ((rightPtr - leftPtr + 1) - topFreq > k)
         {
-            --charFreqMap[s[leftPtr]];
-            ++leftPtr;
+            charFreqMap[s[leftPtr]]--;
+            leftPtr++;
         }
         longestLength = std::max(longestLength, (rightPtr - leftPtr + 1));
     }
+
     return longestLength;
 }
